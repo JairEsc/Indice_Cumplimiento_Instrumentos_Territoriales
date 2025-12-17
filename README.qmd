@@ -5,23 +5,110 @@ format: html
 editor: visual
 ---
 
-## Quarto
+## ICITOG (Índice de Cumplimiento de Instrumentos Territoriales, de Ordenación y Gestión)
 
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+### Instrumentos Municipales
 
-## Running Code
+Comenzamos con una lista en dos categorías:
 
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+-   Requeridos por ley
+
+-   No requeridos por ley
+
+    |                                         |                       |
+    |-----------------------------------------|-----------------------|
+    | **Instrumento**                         | **Requerimientos**    |
+    | Programa Urbano                         | Requeridos por ley    |
+    | Atlas de Riesgos                        | Requeridos por ley    |
+    | Ordenamiento Ecológico                  | Requeridos por ley    |
+    | Inventario de Emisiones                 | Requeridos por ley    |
+    | Prográma Hídrico                        | Requeridos por ley2   |
+    | Ordenamiento Hídrico                    | Requeridos por ley    |
+    | Parciales                               | Requeridos por ley    |
+    | Metropolitano                           | Requeridos por ley    |
+    | Infraestructura Urbana Verde            | No requeridos por ley |
+    | Paleta Vegetal                          | No requeridos por ley |
+    | Programa de Reforestación Urbana        | No requeridos por ley |
+    | Programa de Mejora de Espacios Públicos | No requeridos por ley |
+    | Productos Turísticos                    | No requeridos por ley |
+
+    ### Criterios de evaluación por instrumento
+
+    Para cada municipio y cada instrumento, se evalúa si el producto a sido ***Empezado, Elaborado, Publicado*** y se encuentra ***vigente.*** Naturalmente, estas propiedades se encuentran anidadas y un producto vigente habrá sido Empezado, Terminado en su Elaboración y Publicado de manera que se mantiene vigente. En tal caso, se asocia a cada propiedad un peso creciente de 2, 6, 8 y 10 puntos.\
+
+    ### Pesos de evaluación por instrumento
+
+Una vez construido una matriz de evaluación de instrumentos por municipio, se tendrá una matriz de 84 x (#Instrumentos). En este caso, un municipio ($i$) tendrá $C_{i,j}$ puntos en el instrumento $j$.\
+Definiremos el peso del instrumento $j$ como $$W_j  =(100-(\text{#Municipios con el instrumento a máximo avance})) $$
+
+Por ejemplo, si los 84 municipios tienen publicados y vigentes el instrumento $j$, éste tendrá peso 0 porque es equivalente a no considerarlo dentro del listado.\
+Por otro lado, si únicamente el 10% de los municipios tienen publicado un instrumento y el 8% se encuentra vigente, éste instrumento tendrá un peso de 90.\
+\
+Los valores de estos pesos son irrelevantes en este punto hasta calcular el índice a nivel municipal.
+
+### Índice a nivel municipal
+
+Una vez teniendo los pesos para cada instrumento y las evaluaciones de los municipios para cada instrumento, se define el índice y su normalización\
+$$I_m=\sum\limits_{j}W_j \cdot C_{m,j}$$
+
+$$
+\tilde{I_m}_{\text{ }}=\frac{I_m-E[I_m]}{\sqrt{Var(I_m)}}
+$$
 
 ```{r}
-1 + 1
+#| message: false
+#| include: false
+library(ggplot2,quietly = T)
+library(svglite)
+
+set.seed(123)
+municipios_base=sf::read_sf("../../Reutilizables/Cartografia/municipiosjair.shp")
+graficas_html <- lapply(1:10, function(i) {
+  
+  # Clonamos la base y agregamos datos aleatorios
+  municipios_data <- municipios_base
+  municipios_data$valor_random <- sample(1:100, nrow(municipios_data), replace = TRUE)
+  
+  # Crear el mapa coropleta con ggplot2
+  p <- ggplot(municipios_data) +
+    geom_sf(aes(fill = valor_random), color = "white", size = 0.1) +
+    scale_fill_viridis_c(option = "inferno", name = "Escala") +
+    labs(
+      title = paste("Mapa de Municipios - Simulación #", i),
+      subtitle = "Datos generados aleatoriamente"
+    ) +
+    theme_minimal()
+
+  # Convertir a SVG para JavaScript
+  s <- svgstring(standalone = FALSE, width = 8, height = 6)
+  print(p)
+  dev.off()
+  as.character(s())
+})
+
+
+# Pasar la lista de mapas a OJS
+ojs_define(lista_mapas = graficas_html)
 ```
 
-You can add options to executable code like this
-
-```{r}
-#| echo: false
-2 * 2
+```{ojs}
+//| echo: false
+//| eval: true
+viewof click = Inputs.button("Genera un ejemplo con datos dummy", {
+  className: "btn-primary"
+});
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+```{ojs}
+//| echo: false
+//| eval: true
+// Lógica para elegir una de las 10 gráficas
+mapa_elegido = {
+  click;
+  const i = Math.floor(Math.random() * lista_mapas.length);
+  return lista_mapas[i];
+}
+
+// Mostrar el mapa
+html`<div style="max-width: 800px; margin: auto;">${mapa_elegido}</div>`
+```
