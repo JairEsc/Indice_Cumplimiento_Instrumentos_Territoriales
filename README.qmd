@@ -22,7 +22,7 @@ Comenzamos con una lista en dos categorías:
     | Atlas de Riesgos                        | Requeridos por ley    |
     | Ordenamiento Ecológico                  | Requeridos por ley    |
     | Inventario de Emisiones                 | Requeridos por ley    |
-    | Prográma Hídrico                        | Requeridos por ley2   |
+    | Prográma Hídrico                        | Requeridos por ley    |
     | Ordenamiento Hídrico                    | Requeridos por ley    |
     | Parciales                               | Requeridos por ley    |
     | Metropolitano                           | Requeridos por ley    |
@@ -34,7 +34,7 @@ Comenzamos con una lista en dos categorías:
 
     ### Criterios de evaluación por instrumento
 
-    Para cada municipio y cada instrumento, se evalúa si el producto a sido ***Empezado, Elaborado, Publicado*** y se encuentra ***vigente.*** Naturalmente, estas propiedades se encuentran anidadas y un producto vigente habrá sido Empezado, Terminado en su Elaboración y Publicado de manera que se mantiene vigente. En tal caso, se asocia a cada propiedad un peso creciente de 2, 6, 8 y 10 puntos.\
+    [Para cada municipio y cada instrumento, se evalúa](https://docs.google.com/spreadsheets/d/13VVEU58KwpKzH3O9OvBXyCyhOZTPwjHvEaHucExhgDs/edit?gid=0#gid=0 "Google docs") si el producto a sido ***Empezado, Elaborado, Publicado*** y se encuentra ***vigente.*** Naturalmente, estas propiedades se encuentran anidadas y un producto vigente habrá sido Empezado, Terminado en su Elaboración y Publicado de manera que se mantiene vigente. En tal caso, se asocia a cada propiedad un peso creciente de 2, 6, 8 y 10 puntos, respectivamente.\
 
     ### Pesos de evaluación por instrumento
 
@@ -42,7 +42,7 @@ Una vez construido una matriz de evaluación de instrumentos por municipio, se t
 Definiremos el peso del instrumento $j$ como $$W_j  =(100-(\text{#Municipios con el instrumento a máximo avance})) $$
 
 Por ejemplo, si los 84 municipios tienen publicados y vigentes el instrumento $j$, éste tendrá peso 0 porque es equivalente a no considerarlo dentro del listado.\
-Por otro lado, si únicamente el 10% de los municipios tienen publicado un instrumento y el 8% se encuentra vigente, éste instrumento tendrá un peso de 90.\
+Por otro lado, si únicamente el 20% de los municipios tienen publicado un instrumento y el 10% se encuentra vigente, éste instrumento tendrá un peso de 90.\
 \
 Los valores de estos pesos son irrelevantes en este punto hasta calcular el índice a nivel municipal.
 
